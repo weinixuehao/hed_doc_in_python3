@@ -93,7 +93,6 @@ if __name__ == "__main__":
 
 
 
-        '''
         ## https://github.com/tensorflow/tensorflow/issues/17501, lite 版目前不支持 TransposeConv
         ################################################
         ################################################
@@ -128,4 +127,3 @@ if __name__ == "__main__":
                                     [dsn_fuse])
         open(hed_tflite_model_file_path, 'wb').write(tflite_model)
         print('tf.contrib.lite.toco_convert finished')
-        '''

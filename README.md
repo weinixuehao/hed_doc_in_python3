@@ -77,3 +77,8 @@ _5.3_ 编译 FMHEDNet 静态库
 _5.4_ 编译 TensorFlow Mobile
 TensorFlow 的[官方文档](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/makefile)有介绍编译的步骤。我使用的是手动裁剪过的版本，并且修改过 Protobuf 源码中的 namespace，具体步骤请看[这里](https://github.com/fengjian0106/hed-tutorial-for-document-scanning/blob/master/how_to_build_tensorflow_and_change_namespace_of_protobuf.txt)。
 
+tflite_convert \
+  --output_file=hed_graph.tflite \
+  --graph_def_file=ios_demo/DemoWithStaticLib/DemoWithStaticLib/hed_graph.pb \
+  --input_arrays=hed_input is_training \
+  --output_arrays=hed/dsn_fuse/conv2d/BiasAdd

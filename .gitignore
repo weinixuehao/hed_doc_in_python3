@@ -109,3 +109,4 @@ venv.bak/
 # ios big static lib
 ios_demo/DemoWithStaticLib/DemoWithStaticLib/FrameworkAndLib/opencv2.framework/Versions/A/opencv2
 ios_demo/DemoWithStaticLib/DemoWithStaticLib/FrameworkAndLib/TensorFlow/libtensorflow-core.a
+.vscode/settings.json

@@ -71,7 +71,8 @@ const NSInteger RECT_IMAGE_MAX_HEIGHT = 245;
     [self loadImagePaths];
     
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [self generateDataset];
+//        [self generateDataset];
+        [self generateDataset2];
     });
 }
 
@@ -314,6 +315,87 @@ void draw1PxStroke(CGContextRef context, CGPoint startPoint, CGPoint endPoint, C
     CGContextStrokePath(context);
     CGContextRestoreGState(context);
 }
+
+- (void)generateDataset2 {
+    NSString *imageFolder = @"/Users/user/Desktop/dataset/receipts/";
+    NSString *imageFolder2 = @"/Users/user/Desktop/dataset/midv_500_256x256/";
+    NSString *dstFolder = @"/Users/user/Desktop/dataset/hed_dateset/";
+    NSError *error;
+    if (![[NSFileManager defaultManager] createDirectoryAtPath:dstFolder
+                                   withIntermediateDirectories:NO
+                                                    attributes:nil
+                                                         error:&error])
+    {
+        NSLog(@"Create directory error: %@", error);
+    }
+    [self generateDatasetWithPoints:imageFolder dstFolder:dstFolder];
+    [self generateDatasetWithPoints:imageFolder2 dstFolder:dstFolder];
+}
+
+- (void)generateDatasetWithPoints:(NSString *)imageFolder dstFolder:(NSString *) dstFolder {
+    NSFileManager *manager = [NSFileManager defaultManager];
+    NSDirectoryEnumerator *direnum = [manager enumeratorAtPath:imageFolder];
+    NSArray *filelist= [manager contentsOfDirectoryAtPath:imageFolder error:nil];
+    unsigned long count = [filelist count] / 2;
+    NSString *filename;
+    NSInteger currentIndex = 0;
+    while ((filename = [direnum nextObject] )) {
+        //change the suffix to what you are looking for
+        if ([filename hasSuffix:@".txt"]) {
+            NSString *filePath = [imageFolder stringByAppendingString:filename];
+            FILE* file = fopen([filePath UTF8String], "r");
+            
+            size_t length;
+            char *cLine = fgetln(file,&length);
+            
+            if (length>0) {
+                char str[length+1];
+                strncpy(str, cLine, length);
+                str[length] = '\0';
+                
+                NSString *line = [NSString stringWithFormat:@"%s",str];
+                NSArray<NSString *> *points = [line componentsSeparatedByString:@","];
+                int x0 = [points[0] intValue];
+                int y0 = [points[1] intValue];
+                CGPoint point0 = CGPointMake(x0, y0);
+                int x1 = [points[2] intValue];
+                int y1 = [points[3] intValue];
+                CGPoint point1 = CGPointMake(x1, y1);
+                int x2 = [points[4] intValue];
+                int y2 = [points[5] intValue];
+                CGPoint point2 = CGPointMake(x2, y2);
+                int x3 = [points[6] intValue];
+                int y3 = [points[7] intValue];
+                CGPoint point3 = CGPointMake(x3, y3);
+                NSArray *pointsArray = @[[NSValue valueWithCGPoint:point0],
+                                         [NSValue valueWithCGPoint:point1],
+                                         [NSValue valueWithCGPoint:point3],
+                                         [NSValue valueWithCGPoint:point2]];
+                self.edgeImageView.image = [self drawPoints:pointsArray];
+                UIImage *grayImage = [UIImage imageWithView:self.edgeImageView];//edgeImageView上是没有CATransform3D的，所以截图正常
+                NSString *edgeFile = [filename stringByReplacingOccurrencesOfString:@".txt"
+                                                     withString:@"_annotation.png"];
+                edgeFile = [dstFolder stringByAppendingString:edgeFile];
+                [UIImagePNGRepresentation(grayImage) writeToFile:edgeFile atomically:YES];
+                //移动图片
+                NSString *origImgName = [filename stringByReplacingOccurrencesOfString:@".txt"
+                                                                         withString:@".jpg"];
+                NSString *dstImgName = [filename stringByReplacingOccurrencesOfString:@".txt"
+                                                                            withString:@"_color.jpg"];
+                
+                NSString *origPath = [imageFolder stringByAppendingString:origImgName];
+                NSString *dstPath = [dstFolder stringByAppendingString:dstImgName];
+                NSError *error;
+                [manager copyItemAtPath:origPath toPath:dstPath error:&error];
+                assert(!error);
+                currentIndex++;
+                NSLog(@"totalLen=%@, currentIndex=%@", [@(count)stringValue]  , [@(currentIndex) stringValue]);
+            }
+            fclose(file);
+        }
+    }
+}
+
 
 
 - (UIImage *)drawPoints:(NSArray *)points {

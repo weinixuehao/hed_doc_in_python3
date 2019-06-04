@@ -13,8 +13,8 @@ import imghdr
 import csv
 
 from tensorflow import flags
-flags.DEFINE_string('dataset_root_dir', '', 'Root directory to put all the training data.')
-flags.DEFINE_string('dataset_folder_name', '', 'Folder name for training data. Can contain sub folder name.')
+flags.DEFINE_string('dataset_root_dir', '/Users/user/Desktop/dataset', 'Root directory to put all the training data.')
+flags.DEFINE_string('dataset_folder_name', 'hed_dateset', 'Folder name for training data. Can contain sub folder name.')
 FLAGS = flags.FLAGS
 
 if FLAGS.dataset_root_dir == '':
@@ -40,7 +40,7 @@ if __name__ == "__main__":
 
     csv_file_path = os.path.join(FLAGS.dataset_root_dir, '{}.csv'.format(FLAGS.dataset_folder_name))
 
-    f = open(csv_file_path, 'wb')
+    f = open(csv_file_path, 'w')
     csv_writer = csv.writer(f)
 
     # !! TensorFlow 读取 csv 的时候，不需要也不会处理这一行 title 信息，只会直接读取数据
