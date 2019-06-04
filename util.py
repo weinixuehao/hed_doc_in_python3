@@ -64,7 +64,9 @@ def plot_and_save_image(input_image_path, input_annotation,
     fig.tight_layout()
 
     ax1.set_title('input image')
-    input_image = cv2.imread(input_image_path)
+    input_image_path = input_image_path.decode('UTF-8')
+    print("input_image_path={}".format(input_image_path))
+    input_image = cv2.imread(input_image_path, cv2.IMREAD_COLOR)
     b, g, r  = cv2.split(input_image)
     input_image = cv2.merge((r, g, b))
     input_image = cv2.resize(input_image, (const.image_width, const.image_height), interpolation = cv2.INTER_CUBIC)

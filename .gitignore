@@ -110,3 +110,6 @@ venv.bak/
 ios_demo/DemoWithStaticLib/DemoWithStaticLib/FrameworkAndLib/opencv2.framework/Versions/A/opencv2
 ios_demo/DemoWithStaticLib/DemoWithStaticLib/FrameworkAndLib/TensorFlow/libtensorflow-core.a
 .vscode/settings.json
+log
+debug_output_image
+checkpoint
