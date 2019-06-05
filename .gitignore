@@ -113,3 +113,4 @@ ios_demo/DemoWithStaticLib/DemoWithStaticLib/FrameworkAndLib/TensorFlow/libtenso
 log
 debug_output_image
 checkpoint
+test_image

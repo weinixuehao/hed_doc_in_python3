@@ -16,7 +16,7 @@ from util import *
 from hed_net import *
 
 from tensorflow import flags
-flags.DEFINE_string('image', './test_image/test15.jpg', 
+flags.DEFINE_string('image', './test_image/IMG_1844.jpg', 
                     'Image path to run hed, must be jpg image.')
 flags.DEFINE_string('checkpoint_dir', './checkpoint', 
                     'Checkpoint directory.')
