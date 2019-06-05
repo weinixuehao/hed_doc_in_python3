@@ -20,9 +20,9 @@ from input_pipeline import *
 from hed_net import *
 
 from tensorflow import flags
-flags.DEFINE_string('dataset_root_dir', '/Users/user/Desktop/dataset', 
+flags.DEFINE_string('dataset_root_dir', 'dataset', 
                     'Root directory to put all the training data.')
-flags.DEFINE_string('csv_path', '/Users/user/Desktop/dataset/hed_dateset.csv', 
+flags.DEFINE_string('csv_path', 'dataset/hed_dateset.csv', 
                     'CSV file path.')
 flags.DEFINE_string('checkpoint_dir', './checkpoint', 
                     'Checkpoint directory.')
