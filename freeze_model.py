@@ -27,9 +27,9 @@ if __name__ == "__main__":
 
     batch_size = 1
     image_float = tf.placeholder(tf.float32, shape=(batch_size, const.image_height, const.image_width, 3), name='hed_input')
-    is_training_placeholder = tf.placeholder(tf.bool, name='is_training')
+    # is_training_placeholder = tf.placeholder(tf.bool, name='is_training')
     print('###1 image_float shape is: {}, name is: {}'.format(image_float.get_shape(), image_float.name))
-    dsn_fuse, dsn1, dsn2, dsn3, dsn4, dsn5 = mobilenet_v2_style_hed(image_float, batch_size, is_training_placeholder)
+    dsn_fuse, dsn1, dsn2, dsn3, dsn4, dsn5 = mobilenet_v2_style_hed(image_float, batch_size, is_training=False)
     print('###2 dsn_fuse shape is: {}, name is: {}'.format(dsn_fuse.get_shape(), dsn_fuse.name))
 
     # Saver
@@ -62,7 +62,7 @@ if __name__ == "__main__":
         print('#######################################################')
         print('Input Node is:')
         print('   %s' % image_float)
-        print('   %s' % is_training_placeholder)
+        # print('   %s' % is_training_placeholder)
         print('Output Node is:')
         print('   %s' % dsn_fuse)
         print('#######################################################')
@@ -120,10 +120,21 @@ if __name__ == "__main__":
         #     quantized_input_stats=None,
         #     drop_control_dependency=True
         # )
-        tflite_model = tf.contrib.lite.toco_convert( \
-                                    sess.graph_def, 
-                                    [image_float,
-                                     is_training_placeholder], 
-                                    [dsn_fuse])
-        open(hed_tflite_model_file_path, 'wb').write(tflite_model)
-        print('tf.contrib.lite.toco_convert finished')
+        # tflite_model = tf.contrib.lite.toco_convert( \
+        #                             sess.graph_def, 
+        #                             [image_float], 
+        #                             [dsn_fuse])
+        # open(hed_tflite_model_file_path, 'wb').write(tflite_model)
+        # print('tf.contrib.lite.toco_convert finished')
+
+# 请使用以下命令行转pb to tflite
+toco --graph_def_file=checkpoint/hed_graph.pb \
+    --output_file=checkpoint/hed_graph.tflite \
+    --input_format=TENSORFLOW_GRAPHDEF \
+    --output_format=TFLITE \
+    --input_shape=1,256,256,3 \
+    --input_array=hed_input \
+    --output_array=hed/dsn_fuse/conv2d/BiasAdd \
+    --inference_type=FLOAT \
+    --input_data_type=FLOAT \
+    --post_training_quantize
