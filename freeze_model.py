@@ -100,13 +100,13 @@ if __name__ == "__main__":
         ## 遇到了这样一个 bug，https://github.com/tensorflow/tensorflow/issues/15410 Calling tf.contrib.lite.toco_convert results in global name 'tempfile' is not defined error
         ## TensorFlow 主干代码目前还未修复，先用下面这个临时方案处理一下
         ## manually put back imported modules
-        import tempfile
-        import subprocess
-        tf.contrib.lite.tempfile = tempfile
-        tf.contrib.lite.subprocess = subprocess
+        # import tempfile
+        # import subprocess
+        # tf.contrib.lite.tempfile = tempfile
+        # tf.contrib.lite.subprocess = subprocess
         ################################################
 
-        print('tf.contrib.lite is: %r' % (tf.contrib.lite))
+        # print('tf.contrib.lite is: %r' % (tf.contrib.lite))
         # https://www.tensorflow.org/versions/master/api_docs/python/tf/contrib/lite/toco_convert
         # https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/lite
         # 
@@ -128,13 +128,12 @@ if __name__ == "__main__":
         # print('tf.contrib.lite.toco_convert finished')
 
 # 请使用以下命令行转pb to tflite
-toco --graph_def_file=checkpoint/hed_graph.pb \
-    --output_file=checkpoint/hed_graph.tflite \
-    --input_format=TENSORFLOW_GRAPHDEF \
-    --output_format=TFLITE \
-    --input_shape=1,256,256,3 \
-    --input_array=hed_input \
-    --output_array=hed/dsn_fuse/conv2d/BiasAdd \
-    --inference_type=FLOAT \
-    --input_data_type=FLOAT \
-    --post_training_quantize
+# toco --graph_def_file=checkpoint/hed_graph.pb \
+#     --output_file=checkpoint/hed_graph.tflite \
+#     --input_format=TENSORFLOW_GRAPHDEF \
+#     --output_format=TFLITE \
+#     --input_shape=1,256,256,3 \
+#     --input_array=hed_input \
+#     --output_array=hed/dsn_fuse/conv2d/BiasAdd \
+#     --inference_type=FLOAT \
+#     --input_data_type=FLOAT
