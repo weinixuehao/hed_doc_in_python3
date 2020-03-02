@@ -71,8 +71,8 @@ const NSInteger RECT_IMAGE_MAX_HEIGHT = 245;
     [self loadImagePaths];
     
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-//        [self generateDataset];
-        [self generateDataset2];
+        [self generateDataset];
+//        [self generateDataset2];
     });
 }
 

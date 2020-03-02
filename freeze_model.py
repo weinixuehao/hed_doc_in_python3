@@ -92,7 +92,10 @@ if __name__ == "__main__":
         print('freeze to pb model finished')
 
 
-
+        converter = tf.lite.TFLiteConverter.from_saved_model(saved_model_dir=FLAGS.checkpoint_dir, tag_set=[])
+        converter.optimizations = [tf.lite.Optimize.OPTIMIZE_FOR_SIZE]
+        tflite_quant_model = converter.convert()
+        print("====================")
         ## https://github.com/tensorflow/tensorflow/issues/17501, lite 版目前不支持 TransposeConv
         ################################################
         ################################################
@@ -136,4 +139,5 @@ if __name__ == "__main__":
 #     --input_array=hed_input \
 #     --output_array=hed/dsn_fuse/conv2d/BiasAdd \
 #     --inference_type=FLOAT \
-#     --input_data_type=FLOAT
+#     --input_data_type=FLOAT \
+#     --post_training_quantize
