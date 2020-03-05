@@ -28,8 +28,8 @@ flags.DEFINE_string('checkpoint_dir', './checkpoint',
                     'Checkpoint directory.')
 flags.DEFINE_string('debug_image_dir', './debug_output_image', 
                     'Debug output image directory.')
-flags.DEFINE_string('log_dir', './log', 
-                    'Log directory for tensorflow.')
+# flags.DEFINE_string('log_dir', './log', 
+#                     'Log directory for tensorflow.')
 flags.DEFINE_integer('batch_size', 4, 
                      'Batch size, default 4.')
 flags.DEFINE_integer('iterations', 90000000, 
@@ -44,6 +44,8 @@ flags.DEFINE_boolean('just_set_batch_size_to_one', False,
                      'If true, just set batch size to one and exit(in order to call python freeze_model.py), default False.')
 FLAGS = flags.FLAGS
 
+if FLAGS.log_dir == '':
+    FLAGS.log_dir = './log'    
 if FLAGS.dataset_root_dir == '':
     print('must set dataset_root_dir')
     exit()
@@ -115,8 +117,8 @@ if __name__ == "__main__":
 
     print('image_tensor shape is: {}'.format(image_tensor.get_shape()))
     dsn_fuse, dsn1, dsn2, dsn3, dsn4, dsn5 = mobilenet_v2_style_hed(image_tensor, 
-                                                            FLAGS.batch_size, 
-                                                            is_training_placeholder)
+                                                                FLAGS.batch_size, 
+                                                                is_training_placeholder)
     print('dsn_fuse shape is: {}'.format(dsn_fuse.get_shape()))
 
 
@@ -133,7 +135,9 @@ if __name__ == "__main__":
     print('cost shape is: {}'.format(cost.get_shape()))
     cost_reduce_mean = tf.reduce_mean(cost) # for tf.summary
 
-    
+    g = tf.get_default_graph()
+    tf.contrib.quantize.create_training_graph(input_graph=g,
+                                            quant_delay=10000)
     with tf.variable_scope("adam_vars"):
         if const.use_batch_norm == True:
             with tf.control_dependencies(tf.get_collection(tf.GraphKeys.UPDATE_OPS)):
